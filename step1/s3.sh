@@ -6,19 +6,19 @@ REGION="ap-northeast-2"
 INDEX_FILE="index.html"
 
 # S3 버킷 생성
-echo "Creating S3 bucket..."
+echo "S3 bucket 생성 중...\n\n"
 aws s3api create-bucket --bucket $BUCKET_NAME --region $REGION --create-bucket-configuration LocationConstraint=$REGION
 
 # 정적 웹사이트 호스팅 활성화
-echo "Enabling static website hosting..."
+echo "정적 웹사이트 호스팅 활성화 중...\n\n"
 aws s3 website s3://$BUCKET_NAME/ --index-document $INDEX_FILE
 
 # 퍼블릭 액세스 차단 해제
-echo "Disabling block public access..."
+echo "퍼블릭 액세스 차단 해제 중...\n\n"
 aws s3api delete-public-access-block --bucket $BUCKET_NAME
 
 # 버킷 정책 설정
-echo "Setting bucket policy..."
+echo "버킷 정책 설정 중...\n\n"
 echo '{
     "Version": "2012-10-17",
     "Statement": [
@@ -35,11 +35,11 @@ aws s3api put-bucket-policy --bucket $BUCKET_NAME --policy file://bucket-policy.
 rm bucket-policy.json
 
 # index.html 파일 업로드
-echo "Uploading index.html file..."
+echo "index.html 파일 업로드 중...\n\n"
 aws s3 cp $INDEX_FILE s3://$BUCKET_NAME/
 
 # 웹사이트 URL 출력
-echo "Your website URL is:"
+echo "배포된 웹사이트 주소 :"
 echo "http://$BUCKET_NAME.s3-website.$REGION.amazonaws.com"
 
 # 삭제 명령어
